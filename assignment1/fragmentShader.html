@@ -12,7 +12,24 @@ This program creates a fragment shader.-->
 	<h1>A Fragement Shader by Shashank Aswathanarayana</h1>
 	<p>This is a simple fragment shader using Patricio Gonzalez Vivo's glslCanvas.</p>
 	<canvas class="glslCanvas" data-fragment="
-		INSERT YOUR FRAGMENT SHADER CODE HERE!
+
+	#ifdef GL_ES
+	precision mediump float;
+	#endif
+
+	#define PI 3.14
+
+	uniform vec2 u_resolution;
+	uniform vec2 u_mouse;
+	uniform float u_time;
+
+	void main() {
+
+		vec2 screenRes = gl_FragCoord.xy/u_resolution.xy;
+    	screenRes.x *= u_resolution.x/u_resolution.y;
+
+	    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+	}
 	"
 	width="800" height="600"> </canvas>	
 	</body>
