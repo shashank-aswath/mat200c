@@ -17,7 +17,8 @@ This program creates a fragment shader.-->
 	precision mediump float;
 	#endif
 
-	#define PI 3.14
+	#define PI 3.14159265359
+	#define PHI 1.61803398875
 
 	uniform vec2 u_resolution;
 	uniform vec2 u_mouse;
@@ -26,9 +27,17 @@ This program creates a fragment shader.-->
 	void main() {
 
 		vec2 screenRes = gl_FragCoord.xy/u_resolution.xy;
-    	screenRes.x *= u_resolution.x/u_resolution.y;
+		screenRes.x *= u_resolution.x/u_resolution.y;
 
-	    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+		float ratio = PHI/PI;
+
+		float red = abs(sin(u_time + PI));
+		float green = abs(cos(u_time + PHI));
+		float blue = abs(tan(u_time + ratio));
+
+		vec3 colour = vec3(red, green, blue);
+
+		gl_FragColor = vec4(colour,1.0);
 	}
 	"
 	width="800" height="600"> </canvas>	
