@@ -24,18 +24,28 @@ This program creates a fragment shader with noise.-->
 	uniform vec2 u_mouse;
 	uniform float u_time;
 
+	float rand (vec2 st) { 
+    	return fract(sin(dot(st.xy,vec2(1.0,1.0)))*1.0);
+	}
+
 	void main() {
 
 		vec2 st = gl_FragCoord.xy/u_resolution.xy;
-		st.x *= u_resolution.x/u_resolution.y;
+
+		// Scale the coordinatesystem by 8
+		st *= 5.0;
+
+		// Separate the integer and fractional coordinates
+		vec2 ipos = floor(st);
+		vec2 fpos = fract(st);
+
+		vec3 colour = vec3(rand(ipos));
 
 		float ratio = PHI/PI;
 
-		float red = abs(sin(u_time + PI));
-		float green = abs(cos(u_time + PHI));
-		float blue = abs(tan(u_time + ratio));
+		float red = abs(sin(u_time + PHI));
 
-		vec3 colour = vec3(red, green, blue);
+		colour = vec3(red, fpos);
 
 		gl_FragColor = vec4(colour,1.0);
 	}
