@@ -28,24 +28,43 @@ This program creates a fragment shader with noise.-->
     	return fract(sin(dot(st.xy,vec2(1.0,1.0)))*1.0);
 	}
 
+	float plot(vec2 st, float pct){
+  		return  smoothstep( pct-0.02, pct, st.y) - smoothstep( pct, pct+0.02, st.y);
+	}
+
+	float circle(vec2 st, float radius){
+    	vec2 pos = vec2(0.5)-st;
+    	return smoothstep(1.0-radius,1.0-radius+radius*0.2,1.-dot(pos,pos)*PI);
+	}
+
 	void main() {
 
 		vec2 st = gl_FragCoord.xy/u_resolution.xy;
 
+		// Re-map range from -1 to +1
+		st = st *2.-1.;
+
 		// Scale the coordinatesystem by 8
-		st *= 5.0;
+		st *= 4.0;
 
 		// Separate the integer and fractional coordinates
 		vec2 ipos = floor(st);
 		vec2 fpos = fract(st);
 
+		// Get a random number
 		vec3 colour = vec3(rand(ipos));
 
-		float ratio = PHI/PI;
+		vec3 circles = vec3( circle(st, 0.8 ) );
 
+		float y = 4.0*sin(st.x);
+
+		// Add some colour changing with time
 		float red = abs(sin(u_time + PHI));
 
-		colour = vec3(red, fpos);
+		float pct = plot(st,y);
+		colour = (1.0-pct)*colour+pct*vec3(fpos, red)+circles;
+
+		colour = (1.0-pct)*colour+vec3(red, fpos);
 
 		gl_FragColor = vec4(colour,1.0);
 	}
